@@ -6,9 +6,11 @@ module Skimlinks
       attr_accessor :start_date
       attr_accessor :end_date
       attr_accessor :limit
+      attr_accessor :time_between_requests
 
       def initialize(options = {})
         options[:limit] ||= 600
+        options[:time_between_requests] ||= 3
         super
       end
       def fetch_commissions
@@ -30,11 +32,10 @@ module Skimlinks
           commisions += batch_commisions
 
           if has_next
-            sleep 5
+            sleep time_between_requests
           end
         end
 
-        a = 3
         commisions
       end
     end
