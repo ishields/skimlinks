@@ -20,9 +20,11 @@ module Skimlinks
 
         has_next = true
         commisions = []
+        offset = 0
         while has_next
+          params[:offset] = offset
           results = get(url, params).parsed_response.with_indifferent_access
-
+          offset += limit
           has_next = results.dig(:pagination, :has_next)
 
           batch_commisions = results[:commissions].map do |commision_json|
