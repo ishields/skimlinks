@@ -36,7 +36,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'activesupport'
   gem.add_runtime_dependency 'activemodel'
   gem.add_runtime_dependency 'httparty'
-  gem.add_runtime_dependency 'bugsnag'
 
   # if RUBY_PLATFORM == 'java'
   #   gem.add_runtime_dependency 'json-jruby'

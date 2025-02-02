@@ -55,22 +55,15 @@ module Skimlinks
           if success
             results
           else
-            Bugsnag.leave_breadcrumb(
-              'Retry get failure',
-              { message: last_error&.message },
-              )
             raise StandardError.new('Failed to pass checks.')
           end
         rescue => e
-          #TODO: Would be awesome to log bug not enough bandwidth
-          #Bugsnag.notify(StandardError.new("Failed to make request and pass checks on attempt #{try}: #{e.to_s}"))
           if try < max_tries
             sleep try * wait_coefficient # every attempt wait a little longer
             try += 1
             Rails.logger.info "Retrying get request attempt (#{try})."
             retry
           else
-            Bugsnag.notify(StandardError.new("Failed to make request and pass checks on last attempt #{try}: #{e.to_s}"))
             Rails.logger.info "Failed to perform get request (#{url})."
             raise
           end
@@ -80,8 +73,6 @@ module Skimlinks
       protected
 
       def inner_request(method, path, query = {}, data = {})
-        Bugsnag.leave_breadcrumb('Request to:', { path: path })
-
         if method.downcase == 'post'
           @last_response = self.class.post(path, body: data)
         else
@@ -101,7 +92,6 @@ module Skimlinks
         inner_request method, path, query
       rescue => e
         @last_error = e
-        Bugsnag.notify(e)
         nil
       end
 
